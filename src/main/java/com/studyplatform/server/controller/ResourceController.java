@@ -24,6 +24,9 @@ public class ResourceController {
         this.resourceService = resourceService;
     }
 
+    // -------------------------------------------------------
+    //                     UPLOAD FILE
+    // -------------------------------------------------------
     @PostMapping(
             value = "/upload",
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE
@@ -37,6 +40,9 @@ public class ResourceController {
         return ResponseEntity.ok(resourceService.uploadFile(groupId, req, file));
     }
 
+    // -------------------------------------------------------
+    //                     GET LIST
+    // -------------------------------------------------------
     @GetMapping
     public ResponseEntity<List<ResourceFile>> getFiles(@PathVariable Long groupId) {
         return ResponseEntity.ok(resourceService.getFiles(groupId));
@@ -48,7 +54,8 @@ public class ResourceController {
     @GetMapping("/{fileId}/download")
     public ResponseEntity<byte[]> downloadFile(
             @PathVariable Long groupId,
-            @PathVariable Long fileId) throws IOException {
+            @PathVariable Long fileId
+    ) throws IOException {
 
         ResourceFile file = resourceService.getFile(fileId);
 
@@ -64,5 +71,17 @@ public class ResourceController {
                         "attachment; filename=\"" + file.getFileName() + "\"")
                 .contentType(MediaType.APPLICATION_OCTET_STREAM)
                 .body(fileBytes);
+    }
+
+    // -------------------------------------------------------
+    //                DELETE FILE ENDPOINT
+    // -------------------------------------------------------
+    @DeleteMapping("/{fileId}")
+    public ResponseEntity<Void> deleteFile(
+            @PathVariable Long groupId,
+            @PathVariable Long fileId
+    ) {
+        resourceService.deleteFile(groupId, fileId);
+        return ResponseEntity.noContent().build();
     }
 }

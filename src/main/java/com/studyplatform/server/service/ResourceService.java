@@ -29,6 +29,9 @@ public class ResourceService {
         this.userRepository = userRepository;
     }
 
+    // -------------------------------------------------------
+    //                       UPLOAD
+    // -------------------------------------------------------
     public ResourceFile uploadFile(Long groupId, UploadResourceRequest req, MultipartFile file)
             throws IOException {
 
@@ -39,7 +42,6 @@ public class ResourceService {
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         String uploadDir = System.getProperty("user.dir") + "/uploads/" + groupId;
-
         new File(uploadDir).mkdirs();
 
         String filePath = uploadDir + "/" + file.getOriginalFilename();
@@ -54,6 +56,9 @@ public class ResourceService {
         return resourceRepository.save(resource);
     }
 
+    // -------------------------------------------------------
+    //                       LIST FILES
+    // -------------------------------------------------------
     public List<ResourceFile> getFiles(Long groupId) {
         StudyGroup group = groupRepository.findById(groupId)
                 .orElseThrow(() -> new RuntimeException("Group not found"));
@@ -62,10 +67,32 @@ public class ResourceService {
     }
 
     // -------------------------------------------------------
-    //            GET FILE BY ID (для скачування)
+    //                  GET FILE BY ID
     // -------------------------------------------------------
     public ResourceFile getFile(Long fileId) {
         return resourceRepository.findById(fileId)
                 .orElseThrow(() -> new RuntimeException("File not found"));
+    }
+
+    // -------------------------------------------------------
+    //                  DELETE FILE
+    // -------------------------------------------------------
+    public void deleteFile(Long groupId, Long fileId) {
+
+        ResourceFile file = resourceRepository.findById(fileId)
+                .orElseThrow(() -> new RuntimeException("File not found"));
+
+        if (!file.getGroup().getId().equals(groupId)) {
+            throw new RuntimeException("File does not belong to this group");
+        }
+
+        // Delete from disk
+        File diskFile = new File(file.getFilePath());
+        if (diskFile.exists()) {
+            diskFile.delete();
+        }
+
+        // Delete from DB
+        resourceRepository.delete(file);
     }
 }
