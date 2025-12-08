@@ -17,16 +17,22 @@ public class MembershipService {
     private final MembershipRepository membershipRepository;
     private final UserRepository userRepository;
     private final StudyGroupRepository groupRepository;
+    private final ActivityLogService activityLogService;
 
-    public MembershipService(MembershipRepository membershipRepository,
-                             UserRepository userRepository,
-                             StudyGroupRepository groupRepository) {
+    public MembershipService(
+            MembershipRepository membershipRepository,
+            UserRepository userRepository,
+            StudyGroupRepository groupRepository,
+            ActivityLogService activityLogService
+    ) {
         this.membershipRepository = membershipRepository;
         this.userRepository = userRepository;
         this.groupRepository = groupRepository;
+        this.activityLogService = activityLogService;
     }
 
     public Membership joinGroup(Long groupId, JoinGroupRequest req) {
+
         StudyGroup group = groupRepository.findById(groupId)
                 .orElseThrow(() -> new RuntimeException("Group not found"));
 
@@ -42,7 +48,11 @@ public class MembershipService {
         membership.setGroup(group);
         membership.setRole(req.getRole() != null ? req.getRole() : "MEMBER");
 
-        return membershipRepository.save(membership);
+        Membership saved = membershipRepository.save(membership);
+
+        activityLogService.log(user, "Joined group: " + group.getName());
+
+        return saved;
     }
 
     public List<Membership> getGroupMembers(Long groupId) {

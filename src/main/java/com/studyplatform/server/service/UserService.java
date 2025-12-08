@@ -13,40 +13,34 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final ActivityLogService activityLogService;
 
     public UserService(UserRepository userRepository,
-                       PasswordEncoder passwordEncoder) {
+                       PasswordEncoder passwordEncoder,
+                       ActivityLogService activityLogService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.activityLogService = activityLogService;
     }
 
-    // ================================
-    //           РЕЄСТРАЦІЯ
-    // ================================
     public UserResponse register(UserRegisterRequest req) {
 
         if (userRepository.existsByUsername(req.getUsername())) {
             throw new RuntimeException("Користувач з таким username вже існує!");
         }
 
-        // Конвертація ролі (String → ENUM)
-        User.Role role;
-        try {
-            role = User.Role.valueOf(req.getRole().toUpperCase());
-        } catch (Exception e) {
-            throw new RuntimeException("Невідома роль! Використовуйте STUDENT або TEACHER.");
-        }
-
-        // Хешування пароля
-        String encodedPassword = passwordEncoder.encode(req.getPassword());
+        User.Role role = User.Role.valueOf(req.getRole().toUpperCase());
 
         User user = new User(
                 req.getUsername(),
-                encodedPassword,
+                passwordEncoder.encode(req.getPassword()),
                 role
         );
 
         userRepository.save(user);
+
+        // LOG
+        activityLogService.log(user, "User registered");
 
         return new UserResponse(
                 user.getId(),
@@ -55,15 +49,11 @@ public class UserService {
         );
     }
 
-    // ================================
-    //              ЛОГІН
-    // ================================
     public UserResponse login(UserLoginRequest req) {
 
         User user = userRepository.findByUsername(req.getUsername())
                 .orElseThrow(() -> new RuntimeException("Невірний username або пароль!"));
 
-        // Перевірка пароля через BCrypt
         if (!passwordEncoder.matches(req.getPassword(), user.getPassword())) {
             throw new RuntimeException("Невірний username або пароль!");
         }
@@ -75,13 +65,13 @@ public class UserService {
         );
     }
 
-    // ================================
-    //      ОТРИМАННЯ КОРИСТУВАЧА
-    // ================================
+    public User getUserEntity(String username) {
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+    }
     public UserResponse getUser(String username) {
-
         User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("Користувача не знайдено!"));
+                .orElseThrow(() -> new RuntimeException("User not found"));
 
         return new UserResponse(
                 user.getId(),
@@ -89,4 +79,5 @@ public class UserService {
                 user.getRole().name()
         );
     }
+
 }

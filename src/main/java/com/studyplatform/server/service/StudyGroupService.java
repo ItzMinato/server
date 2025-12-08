@@ -16,16 +16,18 @@ public class StudyGroupService {
 
     private final StudyGroupRepository groupRepository;
     private final UserRepository userRepository;
+    private final ActivityLogService activityLogService;
 
-    public StudyGroupService(StudyGroupRepository groupRepository,
-                             UserRepository userRepository) {
+    public StudyGroupService(
+            StudyGroupRepository groupRepository,
+            UserRepository userRepository,
+            ActivityLogService activityLogService
+    ) {
         this.groupRepository = groupRepository;
         this.userRepository = userRepository;
+        this.activityLogService = activityLogService;
     }
 
-    // ===========================================
-    //          CREATE GROUP  (TEACHER ONLY)
-    // ===========================================
     public StudyGroupResponse createGroup(CreateGroupRequest request) {
 
         User creator = userRepository.findById(request.getCreatorId())
@@ -41,12 +43,13 @@ public class StudyGroupService {
         group.setCreatedBy(creator);
 
         StudyGroup saved = groupRepository.save(group);
+
+        // Logging
+        activityLogService.log(creator, "Created group: " + saved.getName());
+
         return toResponse(saved);
     }
 
-    // ===========================================
-    //      GET ALL GROUPS (Visible to everyone)
-    // ===========================================
     public List<StudyGroupResponse> getAllGroups() {
         return groupRepository.findAll()
                 .stream()
@@ -54,9 +57,6 @@ public class StudyGroupService {
                 .collect(Collectors.toList());
     }
 
-    // ===========================================
-    //   GET GROUPS CREATED BY TEACHER
-    // ===========================================
     public List<StudyGroupResponse> getTeacherGroups(Long teacherId) {
 
         User teacher = userRepository.findById(teacherId)
@@ -68,9 +68,6 @@ public class StudyGroupService {
                 .collect(Collectors.toList());
     }
 
-    // ===========================================
-    //   CONVERT ENTITY → DTO
-    // ===========================================
     private StudyGroupResponse toResponse(StudyGroup g) {
         return new StudyGroupResponse(
                 g.getId(),

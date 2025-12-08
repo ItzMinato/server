@@ -20,13 +20,18 @@ public class ResourceService {
     private final ResourceFileRepository resourceRepository;
     private final StudyGroupRepository groupRepository;
     private final UserRepository userRepository;
+    private final ActivityLogService activityLogService;
 
-    public ResourceService(ResourceFileRepository resourceRepository,
-                           StudyGroupRepository groupRepository,
-                           UserRepository userRepository) {
+    public ResourceService(
+            ResourceFileRepository resourceRepository,
+            StudyGroupRepository groupRepository,
+            UserRepository userRepository,
+            ActivityLogService activityLogService
+    ) {
         this.resourceRepository = resourceRepository;
         this.groupRepository = groupRepository;
         this.userRepository = userRepository;
+        this.activityLogService = activityLogService;
     }
 
     // -------------------------------------------------------
@@ -53,7 +58,12 @@ public class ResourceService {
         resource.setFileName(file.getOriginalFilename());
         resource.setFilePath(filePath);
 
-        return resourceRepository.save(resource);
+        ResourceFile saved = resourceRepository.save(resource);
+
+        // ⭐ LOG ACTION
+        activityLogService.log(uploader, "Uploaded file: " + file.getOriginalFilename());
+
+        return saved;
     }
 
     // -------------------------------------------------------
@@ -86,13 +96,9 @@ public class ResourceService {
             throw new RuntimeException("File does not belong to this group");
         }
 
-        // Delete from disk
         File diskFile = new File(file.getFilePath());
-        if (diskFile.exists()) {
-            diskFile.delete();
-        }
+        if (diskFile.exists()) diskFile.delete();
 
-        // Delete from DB
         resourceRepository.delete(file);
     }
 }
