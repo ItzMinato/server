@@ -1,52 +1,42 @@
 package com.studyplatform.server.controller;
 
-import com.studyplatform.server.entity.User;
+import com.studyplatform.server.dto.UserLoginRequest;
+import com.studyplatform.server.dto.UserRegisterRequest;
+import com.studyplatform.server.dto.UserResponse;
 import com.studyplatform.server.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
+
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
     // ================================
-    //  РЕЄСТРАЦІЯ
+    //             РЕЄСТРАЦІЯ
     // ================================
     @PostMapping("/register")
-    public String registerUser(@RequestBody User user) {
-        try {
-            userService.registerUser(
-                    user.getUsername(),
-                    user.getPassword(),
-                    user.getRole()
-            );
-            return "User registered successfully!";
-        } catch (RuntimeException e) {
-            return "Error: " + e.getMessage();
-        }
+    public UserResponse register(@RequestBody UserRegisterRequest req) {
+        return userService.register(req);
     }
 
     // ================================
-    //  ЛОГІН
+    //               ЛОГІН
     // ================================
     @PostMapping("/login")
-    public String loginUser(@RequestBody User user) {
-        try {
-            userService.loginUser(user.getUsername(), user.getPassword());
-            return "Login successful!";
-        } catch (RuntimeException e) {
-            return "Error: " + e.getMessage();
-        }
+    public UserResponse login(@RequestBody UserLoginRequest req) {
+        return userService.login(req);
     }
 
     // ================================
-    //  ОТРИМАННЯ КОРИСТУВАЧА
+    //      ОТРИМАТИ КОРИСТУВАЧА
     // ================================
     @GetMapping("/{username}")
-    public User getUser(@PathVariable String username) {
+    public UserResponse getUser(@PathVariable String username) {
         return userService.getUser(username);
     }
 }

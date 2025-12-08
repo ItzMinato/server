@@ -23,9 +23,17 @@ public class StudyGroupService {
         this.userRepository = userRepository;
     }
 
+    // ===========================================
+    //          CREATE GROUP  (TEACHER ONLY)
+    // ===========================================
     public StudyGroupResponse createGroup(CreateGroupRequest request) {
+
         User creator = userRepository.findById(request.getCreatorId())
                 .orElseThrow(() -> new RuntimeException("User not found"));
+
+        if (creator.getRole() != User.Role.TEACHER) {
+            throw new RuntimeException("Only a TEACHER can create groups!");
+        }
 
         StudyGroup group = new StudyGroup();
         group.setName(request.getName());
@@ -36,6 +44,9 @@ public class StudyGroupService {
         return toResponse(saved);
     }
 
+    // ===========================================
+    //      GET ALL GROUPS (Visible to everyone)
+    // ===========================================
     public List<StudyGroupResponse> getAllGroups() {
         return groupRepository.findAll()
                 .stream()
@@ -43,6 +54,23 @@ public class StudyGroupService {
                 .collect(Collectors.toList());
     }
 
+    // ===========================================
+    //   GET GROUPS CREATED BY TEACHER
+    // ===========================================
+    public List<StudyGroupResponse> getTeacherGroups(Long teacherId) {
+
+        User teacher = userRepository.findById(teacherId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        return groupRepository.findByCreatedBy(teacher)
+                .stream()
+                .map(this::toResponse)
+                .collect(Collectors.toList());
+    }
+
+    // ===========================================
+    //   CONVERT ENTITY → DTO
+    // ===========================================
     private StudyGroupResponse toResponse(StudyGroup g) {
         return new StudyGroupResponse(
                 g.getId(),

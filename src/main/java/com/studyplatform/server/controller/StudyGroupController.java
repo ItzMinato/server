@@ -18,13 +18,27 @@ public class StudyGroupController {
         this.groupService = groupService;
     }
 
+    // ===========================================
+    //            CREATE GROUP  (TEACHER)
+    // ===========================================
     @PostMapping
     public ResponseEntity<StudyGroupResponse> createGroup(@RequestBody CreateGroupRequest request) {
         return ResponseEntity.ok(groupService.createGroup(request));
     }
 
+    // ===========================================
+    //            GET ALL GROUPS
+    // ===========================================
     @GetMapping
     public ResponseEntity<List<StudyGroupResponse>> getGroups() {
         return ResponseEntity.ok(groupService.getAllGroups());
+    }
+
+    // ===========================================
+    //       GET TEACHER'S GROUPS
+    // ===========================================
+    @GetMapping("/teacher/{id}")
+    public ResponseEntity<List<StudyGroupResponse>> getTeacherGroups(@PathVariable Long id) {
+        return ResponseEntity.ok(groupService.getTeacherGroups(id));
     }
 }

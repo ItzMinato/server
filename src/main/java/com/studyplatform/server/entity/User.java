@@ -6,26 +6,34 @@ import jakarta.persistence.*;
 @Table(name = "users")
 public class User {
 
+    public enum Role {
+        STUDENT,
+        TEACHER
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String username;
 
     @Column(nullable = false)
-    private String password;
+    private String password; // буде зберігатися у зашифрованому вигляді (BCrypt)
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private String role; // STUDENT / TEACHER
+    private Role role;
 
     public User() {}
 
-    public User(String username, String password, String role) {
+    public User(String username, String password, Role role) {
         this.username = username;
         this.password = password;
         this.role = role;
     }
+
+    // ---------- GETTERS / SETTERS -----------
 
     public Long getId() {
         return id;
@@ -47,11 +55,11 @@ public class User {
         this.password = password;
     }
 
-    public String getRole() {
+    public Role getRole() {
         return role;
     }
 
-    public void setRole(String role) {
+    public void setRole(Role role) {
         this.role = role;
     }
 }

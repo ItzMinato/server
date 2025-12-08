@@ -4,6 +4,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
@@ -14,13 +16,22 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http
-                .csrf(csrf -> csrf.disable())  // Вимкнути CSRF
+                .csrf(csrf -> csrf.disable())  // Вимкнути CSRF для REST
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/users/**").permitAll() // Дозволити доступ до API
-                        .anyRequest().permitAll()
+                        .requestMatchers("/api/users/**").permitAll()  // Реєстрація + логін відкриті
+                        .anyRequest().permitAll()                     // Інші ендпоінти поки відкриті
                 )
-                .formLogin(form -> form.disable()) // Вимкнути форму логіну
+                .formLogin(form -> form.disable())   // Вимкнути HTML форму логіну
                 .httpBasic(basic -> basic.disable()); // Вимкнути Basic Auth
 
-        return http.build();    }
+        return http.build();
+    }
+
+    // -----------------------------
+    //     BCrypt encoder
+    // -----------------------------
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 }

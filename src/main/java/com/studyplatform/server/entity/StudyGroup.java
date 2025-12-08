@@ -2,6 +2,8 @@ package com.studyplatform.server.entity;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "groups")
@@ -24,6 +26,17 @@ public class StudyGroup {
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
+    // ======================================
+    //         MEMBERS OF GROUP
+    // ======================================
+    @ManyToMany
+    @JoinTable(
+            name = "group_members",
+            joinColumns = @JoinColumn(name = "group_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
+    private Set<User> members = new HashSet<>();
+
     public StudyGroup() {}
 
     @PrePersist
@@ -32,6 +45,8 @@ public class StudyGroup {
             createdAt = LocalDateTime.now();
         }
     }
+
+    // ============ GETTERS / SETTERS ============
 
     public Long getId() { return id; }
 
@@ -52,4 +67,8 @@ public class StudyGroup {
     public LocalDateTime getCreatedAt() { return createdAt; }
 
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+
+    public Set<User> getMembers() { return members; }
+
+    public void setMembers(Set<User> members) { this.members = members; }
 }
