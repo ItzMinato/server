@@ -76,10 +76,12 @@ public class ApiClient {
 
     // ---------- CREATE NEW GROUP ------------------
 
-    public static String createGroup(String name) throws Exception {
+    public static String createGroup(String name, String description, long creatorId) throws Exception {
 
         JsonObject json = new JsonObject();
         json.addProperty("name", name);
+        json.addProperty("description", description);
+        json.addProperty("creatorId", creatorId);
 
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(BASE_URL + "/groups"))
