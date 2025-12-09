@@ -1,39 +1,93 @@
-<?xml version="1.0" encoding="UTF-8"?>
+package org.example;
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+        import javafx.fxml.FXML;
+        import javafx.fxml.FXMLLoader;
+        import javafx.scene.Scene;
+        import javafx.scene.control.Alert;
+        import javafx.scene.control.ListView;
+        import javafx.stage.Stage;
 
-<AnchorPane xmlns="http://javafx.com/javafx/21"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="org.example.GroupsController"
-            prefWidth="600" prefHeight="400">
+        import java.util.List;
 
-    <children>
+        public class GroupsController {
 
-        <Label text="My Groups"
-               layoutX="30" layoutY="20"
-               style="-fx-font-size: 22px; -fx-font-weight: bold;"/>
+        @FXML
+        private ListView<Group> groupsList;
 
-        <ListView fx:id="groupsList"
-                  layoutX="30" layoutY="70"
-                  prefWidth="400"
-                  prefHeight="250"/>
+    @FXML
+    public void initialize() {
+    loadGroups();
+    }
 
-        <Button text="Create Group"
-                layoutX="450" layoutY="70"
-                prefWidth="120"
-                onAction="#onCreateGroup"/>
+    private void loadGroups() {
+    try {
+    List<Group> groups = ApiClient.getUserGroups();
+        groupsList.getItems().setAll(groups);
 
-        <Button text="Open Group"
-                layoutX="450" layoutY="120"
-                prefWidth="120"
-                onAction="#onOpenGroup"/>
+        } catch (Exception e) {
+        showAlert("Error", "Cannot load groups:\n" + e.getMessage());
+        }
+        }
 
-        <Button text="Back"
-                layoutX="450" layoutY="170"
-                prefWidth="120"
-                onAction="#onBack"/>
+        @FXML
+        private void onCreateGroup() {
+        try {
+        FXMLLoader loader = new FXMLLoader(MainApp.class.getResource("/fxml/create-group.fxml"));
+        Scene scene = new Scene(loader.load(), 450, 250);
 
-    </children>
+        Stage stage = (Stage) groupsList.getScene().getWindow();
+        stage.setScene(scene);
 
-</AnchorPane>
+        } catch (Exception e) {
+        e.printStackTrace();
+        }
+        }
+
+        @FXML
+        private void onOpenGroup() {
+
+        Group selected = groupsList.getSelectionModel().getSelectedItem();
+
+        if (selected == null) {
+        showAlert("Error", "Please select a group first!");
+        return;
+        }
+
+        try {
+        FXMLLoader loader = new FXMLLoader(MainApp.class.getResource("/fxml/group-details.fxml"));
+        Scene scene = new Scene(loader.load(), 600, 400);
+
+        // --- Передаємо дані в контролер ---
+        GroupDetailsController controller = loader.getController();
+        controller.setGroup(selected);
+
+        Stage stage = (Stage) groupsList.getScene().getWindow();
+        stage.setScene(scene);
+
+        } catch (Exception e) {
+        showAlert("Error", "Failed to open group:\n" + e.getMessage());
+        }
+        }
+
+        @FXML
+        private void onBack() {
+        try {
+        FXMLLoader loader = new FXMLLoader(MainApp.class.getResource("/fxml/main-view.fxml"));
+        Scene scene = new Scene(loader.load(), 600, 400);
+
+        Stage stage = (Stage) groupsList.getScene().getWindow();
+        stage.setScene(scene);
+
+        } catch (Exception e) {
+        e.printStackTrace();
+        }
+        }
+
+        private void showAlert(String title, String msg) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(msg);
+        alert.showAndWait();
+        }
+        }
