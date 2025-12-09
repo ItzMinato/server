@@ -33,7 +33,7 @@ public class GroupDetailsController {
             creatorLabel.setText(String.valueOf(g.getCreatedBy()));
 
         } catch (Exception e) {
-            nameLabel.setText("Error loading group");
+            nameLabel.setText("ERROR LOADING GROUP");
             e.printStackTrace();
         }
     }
@@ -51,4 +51,20 @@ public class GroupDetailsController {
             e.printStackTrace();
         }
     }
+    @FXML
+    private void onOpenTasks() {
+        try {
+            FXMLLoader loader = new FXMLLoader(MainApp.class.getResource("/fxml/tasks-view.fxml"));
+            Scene scene = new Scene(loader.load(), 600, 400);
+
+            TasksController controller = loader.getController();
+            controller.setGroupId(groupId);
+
+            Stage stage = (Stage) nameLabel.getScene().getWindow();
+            stage.setScene(scene);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }

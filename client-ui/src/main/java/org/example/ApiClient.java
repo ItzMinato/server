@@ -10,6 +10,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Arrays;
 
 public class ApiClient {
 
@@ -97,7 +98,7 @@ public class ApiClient {
     public static Group getGroupById(long id) throws Exception {
 
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(BASE_URL + "/groups/teacher/" + CurrentUser.getId()))
+                .uri(URI.create(BASE_URL + "/groups"))
                 .header("Content-Type", "application/json; charset=UTF-8")
                 .GET()
                 .build();
@@ -105,7 +106,80 @@ public class ApiClient {
         HttpResponse<String> response =
                 client.send(request, HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8));
 
-        return gson.fromJson(response.body(), Group.class);
+        Group[] groups = gson.fromJson(response.body(), Group[].class);
+
+        for (Group g : groups) {
+            if (g.getId() == id) {
+                return g;
+            }
+        }
+
+        throw new RuntimeException("Group ID not found: " + id);
+    }
+    public static List<Task> getTasks(long groupId) throws Exception {
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(BASE_URL + "/groups/" + groupId + "/tasks"))
+                .header("Content-Type", "application/json")
+                .GET()
+                .build();
+
+        HttpResponse<String> response =
+                client.send(request, HttpResponse.BodyHandlers.ofString());
+
+        Task[] tasks = gson.fromJson(response.body(), Task[].class);
+        return Arrays.asList(tasks);
+    }
+    public static String createTask(long groupId, String title, String description, String deadline) throws Exception {
+
+        JsonObject json = new JsonObject();
+        json.addProperty("title", title);
+        json.addProperty("description", description);
+        json.addProperty("deadline", deadline);
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(BASE_URL + "/groups/" + groupId + "/tasks"))
+                .header("Content-Type", "application/json")
+                .POST(HttpRequest.BodyPublishers.ofString(json.toString()))
+                .build();
+
+        HttpResponse<String> response =
+                client.send(request, HttpResponse.BodyHandlers.ofString());
+
+        return response.body();
+    }
+    public static String createTask(long groupId, String title, String description) throws Exception {
+
+        JsonObject json = new JsonObject();
+        json.addProperty("createdById", CurrentUser.getId()); // ВАЖЛИВО!
+        json.addProperty("title", title);
+        json.addProperty("description", description);
+        json.addProperty("deadline", (String) null); // якщо дедлайн буде потрібен – зробимо
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(BASE_URL + "/groups/" + groupId + "/tasks"))
+                .header("Content-Type", "application/json; charset=UTF-8")
+                .POST(HttpRequest.BodyPublishers.ofString(json.toString(), StandardCharsets.UTF_8))
+                .build();
+
+        HttpResponse<String> response =
+                client.send(request, HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8));
+
+        return response.body();
+    }
+    public static Task updateTaskStatus(long groupId, long taskId, String status) throws Exception {
+
+        JsonObject json = new JsonObject();
+        json.addProperty("status", status);
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(BASE_URL + "/groups/" + groupId + "/tasks/" + taskId + "/status"))
+                .header("Content-Type", "application/json")
+                .method("PATCH", HttpRequest.BodyPublishers.ofString(json.toString()))
+                .build();
+
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        return gson.fromJson(response.body(), Task.class);
     }
 
 }

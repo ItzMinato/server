@@ -11,8 +11,9 @@ import java.util.List;
 
 public class GroupsController {
 
+    // IMPORTANT: Now ListView holds Group objects, not Strings
     @FXML
-    private ListView<String> groupsList;
+    private ListView<Group> groupsList;
 
     @FXML
     private void initialize() {
@@ -24,17 +25,14 @@ public class GroupsController {
             List<Group> groups = ApiClient.getUserGroups();
 
             groupsList.getItems().clear();
+            groupsList.getItems().addAll(groups);
 
-            for (Group g : groups) {
-                groupsList.getItems().add(g.getName());
-            }
-
+            // Thanks to Group.toString(), the ListView will show group names
         } catch (Exception e) {
             showAlert("Error", "Failed to load groups:\n" + e.getMessage());
         }
     }
 
-    // ------------------ FIXED METHOD ------------------
     @FXML
     private void onCreateGroup() {
         try {
@@ -49,18 +47,33 @@ public class GroupsController {
             showAlert("Error", "Cannot open Create Group window:\n" + e.getMessage());
         }
     }
-    // --------------------------------------------------
 
     @FXML
     private void onOpenGroup() {
-        String selected = groupsList.getSelectionModel().getSelectedItem();
+
+        // Now this returns a Group object, not a String
+        Group selected = groupsList.getSelectionModel().getSelectedItem();
 
         if (selected == null) {
-            showAlert("Error", "Please select a group.");
+            showAlert("Error", "Please select a group first!");
             return;
         }
 
-        showAlert("Info", "Opening group: " + selected);
+        try {
+            FXMLLoader loader = new FXMLLoader(MainApp.class.getResource("/fxml/group-details.fxml"));
+            Scene scene = new Scene(loader.load(), 600, 400);
+
+            // Pass group ID to GroupDetailsController
+            GroupDetailsController controller = loader.getController();
+            controller.setGroupId(selected.getId());
+
+            Stage stage = (Stage) groupsList.getScene().getWindow();
+            stage.setScene(scene);
+
+        } catch (Exception e) {
+            showAlert("Error", "Cannot open group:\n" + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     @FXML
@@ -71,6 +84,7 @@ public class GroupsController {
 
             Stage stage = (Stage) groupsList.getScene().getWindow();
             stage.setScene(scene);
+
         } catch (Exception e) {
             e.printStackTrace();
         }

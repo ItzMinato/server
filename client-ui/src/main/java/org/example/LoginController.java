@@ -1,5 +1,6 @@
 package org.example;
 
+import com.google.gson.Gson;   // ← додано!
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -30,16 +31,19 @@ public class LoginController {
             String response = ApiClient.login(username, password);
             System.out.println("Server response: " + response);
 
-            // --- CHECK IF SERVER RETURNED ERROR ---
+            // Check for server error
             if (response.toLowerCase().contains("error")) {
                 showAlert("Login failed", response);
-                return; // stop here, don't open main window
+                return;
             }
 
-            // success → save user
-            CurrentUser.setUsername(username);
+            // Convert JSON → UserResponse
+            UserResponse user = new Gson().fromJson(response, UserResponse.class);
 
-            // open main window
+            // Save logged user
+            CurrentUser.set(user.getId(), user.getUsername(), user.getRole());
+
+            // Load main window
             FXMLLoader loader = new FXMLLoader(MainApp.class.getResource("/fxml/main-view.fxml"));
             Scene scene = new Scene(loader.load(), 600, 400);
 
@@ -50,7 +54,6 @@ public class LoginController {
             showAlert("Error", "Login failed:\n" + e.getMessage());
         }
     }
-
 
     @FXML
     private void onGoToRegister() {

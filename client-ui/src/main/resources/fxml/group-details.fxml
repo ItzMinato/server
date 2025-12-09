@@ -23,6 +23,9 @@
                layoutX="30" layoutY="120"/>
         <Label fx:id="creatorLabel"
                layoutX="120" layoutY="120"/>
+        <Button text="Tasks"
+                layoutX="150" layoutY="350"
+                onAction="#onOpenTasks"/>
 
         <Button text="Back"
                 layoutX="30" layoutY="350"
