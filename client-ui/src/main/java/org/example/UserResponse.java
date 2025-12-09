@@ -5,15 +5,7 @@ public class UserResponse {
     private String username;
     private String role;
 
-    public Long getId() {
-        return id;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public String getRole() {
-        return role;
-    }
+    public Long getId() { return id; }
+    public String getUsername() { return username; }
+    public String getRole() { return role; }
 }

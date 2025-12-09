@@ -18,6 +18,24 @@ public class ApiClient {
 
     // ---------- AUTH ----------
 
+    public static UserResponse login(String username, String password) throws Exception {
+
+        JsonObject json = new JsonObject();
+        json.addProperty("username", username);
+        json.addProperty("password", password);
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(BASE_URL + "/users/login"))
+                .header("Content-Type", "application/json")
+                .POST(HttpRequest.BodyPublishers.ofString(json.toString()))
+                .build();
+
+        HttpResponse<String> response =
+                client.send(request, HttpResponse.BodyHandlers.ofString());
+
+        return gson.fromJson(response.body(), UserResponse.class);
+    }
+
     public static String register(String username, String password, String role) throws Exception {
 
         JsonObject json = new JsonObject();
@@ -27,24 +45,6 @@ public class ApiClient {
 
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(BASE_URL + "/users/register"))
-                .header("Content-Type", "application/json")
-                .POST(HttpRequest.BodyPublishers.ofString(json.toString()))
-                .build();
-
-        HttpResponse<String> response =
-                client.send(request, HttpResponse.BodyHandlers.ofString());
-
-        return response.body();
-    }
-
-    public static String login(String username, String password) throws Exception {
-
-        JsonObject json = new JsonObject();
-        json.addProperty("username", username);
-        json.addProperty("password", password);
-
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(BASE_URL + "/users/login"))
                 .header("Content-Type", "application/json")
                 .POST(HttpRequest.BodyPublishers.ofString(json.toString()))
                 .build();
@@ -78,7 +78,9 @@ public class ApiClient {
         JsonObject json = new JsonObject();
         json.addProperty("name", name);
         json.addProperty("description", "");
-        json.addProperty("creatorId", 1);   // тимчасово: групи створює юзер з id=1
+
+        // ВАЖЛИВО → використовуємо справжній id залогіненого юзера
+        json.addProperty("creatorId", CurrentUser.getUserId());
 
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(BASE_URL + "/groups"))
