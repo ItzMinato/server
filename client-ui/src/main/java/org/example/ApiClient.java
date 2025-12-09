@@ -59,7 +59,7 @@ public class ApiClient {
     public static List<Group> getUserGroups() throws Exception {
 
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(BASE_URL + "/groups/my"))
+                .uri(URI.create(BASE_URL + "/groups"))  // <-- ВАЖЛИВО!!!
                 .header("Content-Type", "application/json")
                 .GET()
                 .build();
