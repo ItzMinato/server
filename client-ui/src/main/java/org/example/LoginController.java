@@ -27,14 +27,19 @@ public class LoginController {
                 return;
             }
 
-            // Call API
             String response = ApiClient.login(username, password);
             System.out.println("Server response: " + response);
 
-            // Save logged user
+            // --- CHECK IF SERVER RETURNED ERROR ---
+            if (response.toLowerCase().contains("error")) {
+                showAlert("Login failed", response);
+                return; // stop here, don't open main window
+            }
+
+            // success → save user
             CurrentUser.setUsername(username);
 
-            // Load main window
+            // open main window
             FXMLLoader loader = new FXMLLoader(MainApp.class.getResource("/fxml/main-view.fxml"));
             Scene scene = new Scene(loader.load(), 600, 400);
 
@@ -45,6 +50,7 @@ public class LoginController {
             showAlert("Error", "Login failed:\n" + e.getMessage());
         }
     }
+
 
     @FXML
     private void onGoToRegister() {
