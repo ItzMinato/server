@@ -51,7 +51,7 @@ public class ApiClient {
         HttpResponse<String> response =
                 client.send(request, HttpResponse.BodyHandlers.ofString());
 
-        return response.body();
+        return response.body(); // ПОВЕРТАЄМО СИРЕ JSON
     }
 
     // ------------------ GROUPS ---------------------
