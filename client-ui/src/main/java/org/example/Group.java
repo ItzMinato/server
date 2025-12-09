@@ -1,14 +1,17 @@
 package org.example;
 
 public class Group {
+
     private Long id;
     private String name;
 
-    public Long getId() { return id; }
-    public String getName() { return name; }
+    public Group() {} // Gson needs empty constructor
 
-    @Override
-    public String toString() {
+    public Long getId() {
+        return id;
+    }
+
+    public String getName() {
         return name;
     }
 }
