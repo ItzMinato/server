@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="org.example.GroupsController"
+            prefWidth="600" prefHeight="400">
+
+    <children>
+
+        <Label text="My Groups"
+               layoutX="30" layoutY="20"
+               style="-fx-font-size: 22px; -fx-font-weight: bold;"/>
+
+        <ListView fx:id="groupsList"
+                  layoutX="30" layoutY="70"
+                  prefWidth="400"
+                  prefHeight="250"/>
+
+        <Button text="Create Group"
+                layoutX="450" layoutY="70"
+                prefWidth="120"
+                onAction="#onCreateGroup"/>
+
+        <Button text="Open Group"
+                layoutX="450" layoutY="120"
+                prefWidth="120"
+                onAction="#onOpenGroup"/>
+
+        <Button text="Back"
+                layoutX="450" layoutY="170"
+                prefWidth="120"
+                onAction="#onBack"/>
+
+    </children>
+
+</AnchorPane>
