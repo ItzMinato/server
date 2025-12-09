@@ -94,4 +94,18 @@ public class ApiClient {
 
         return response.body();
     }
+    public static Group getGroupById(long id) throws Exception {
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(BASE_URL + "/groups/teacher/" + CurrentUser.getId()))
+                .header("Content-Type", "application/json; charset=UTF-8")
+                .GET()
+                .build();
+
+        HttpResponse<String> response =
+                client.send(request, HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8));
+
+        return gson.fromJson(response.body(), Group.class);
+    }
+
 }

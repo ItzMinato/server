@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="org.example.GroupDetailsController"
+            prefWidth="600" prefHeight="400">
+
+    <children>
+        <Label fx:id="nameLabel"
+               layoutX="30" layoutY="30"
+               style="-fx-font-size: 22px; -fx-font-weight: bold;"/>
+
+        <Label text="Description:"
+               layoutX="30" layoutY="80"/>
+        <Label fx:id="descLabel"
+               layoutX="120" layoutY="80"
+               prefWidth="400"/>
+
+        <Label text="Created by:"
+               layoutX="30" layoutY="120"/>
+        <Label fx:id="creatorLabel"
+               layoutX="120" layoutY="120"/>
+
+        <Button text="Back"
+                layoutX="30" layoutY="350"
+                onAction="#onBack"/>
+    </children>
+
+</AnchorPane>
