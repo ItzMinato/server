@@ -12,6 +12,10 @@ public class CreateGroupController {
     @FXML
     private TextField nameField;
 
+    // Якщо додаси поле опису в FXML, просто розкоментуєш:
+    // @FXML
+    // private TextField descriptionField;
+
     @FXML
     private void onCreate() {
         try {
@@ -22,9 +26,22 @@ public class CreateGroupController {
                 return;
             }
 
-            String response = ApiClient.createGroup(name);
-            showAlert("Success", "Group created:\n" + response);
+            // Тимчасова заглушка — опис поки порожній
+            String description = "";
 
+            // Тимчасово: creatorId = 3 (teacher1)
+            long creatorId = 3;
+
+            // ВИКЛИКАЄМО НОВУ ВЕРСІЮ API
+            String response = ApiClient.createGroup(name, description, creatorId);
+
+            // Перевірка на помилку
+            if (response.contains("\"status\":500") || response.toLowerCase().contains("error")) {
+                showAlert("Error", "Server error:\n" + response);
+                return;
+            }
+
+            showAlert("Success", "Group created:\n" + response);
             goBack();
 
         } catch (Exception e) {
