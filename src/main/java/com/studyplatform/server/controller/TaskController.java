@@ -32,7 +32,6 @@ public class TaskController {
         return ResponseEntity.ok(taskService.getTasks(groupId));
     }
 
-    // ✅ Правильне місце — всередині класу!
     @PatchMapping("/{taskId}/status")
     public ResponseEntity<Task> updateStatus(
             @PathVariable Long groupId,

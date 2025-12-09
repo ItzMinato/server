@@ -20,7 +20,7 @@ public class Membership {
     private StudyGroup group;
 
     @Column(nullable = false)
-    private String role; // "ADMIN" or "MEMBER"
+    private String role;
 
     @Column(name = "joined_at", nullable = false)
     private LocalDateTime joinedAt;

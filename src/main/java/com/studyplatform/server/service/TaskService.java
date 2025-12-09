@@ -54,7 +54,6 @@ public class TaskService {
         return taskRepository.findByGroup(group);
     }
 
-    // ✅ ПРАВИЛЬНО: метод ВНУТРІШЕ класу
     public Task updateStatus(Long taskId, String newStatus) {
 
         Task task = taskRepository.findById(taskId)

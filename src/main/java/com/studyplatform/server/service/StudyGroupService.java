@@ -44,7 +44,6 @@ public class StudyGroupService {
 
         StudyGroup saved = groupRepository.save(group);
 
-        // Logging
         activityLogService.log(creator, "Created group: " + saved.getName());
 
         return toResponse(saved);

@@ -26,9 +26,6 @@ public class StudyGroup {
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
-    // ======================================
-    //         MEMBERS OF GROUP
-    // ======================================
     @ManyToMany
     @JoinTable(
             name = "group_members",
@@ -45,8 +42,6 @@ public class StudyGroup {
             createdAt = LocalDateTime.now();
         }
     }
-
-    // ============ GETTERS / SETTERS ============
 
     public Long getId() { return id; }
 

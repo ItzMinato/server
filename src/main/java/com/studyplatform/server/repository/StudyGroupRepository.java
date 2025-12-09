@@ -10,6 +10,5 @@ import java.util.List;
 @Repository
 public interface StudyGroupRepository extends JpaRepository<StudyGroup, Long> {
 
-    // Повертає всі групи, створені певним юзером (teacher)
     List<StudyGroup> findByCreatedBy(User createdBy);
 }

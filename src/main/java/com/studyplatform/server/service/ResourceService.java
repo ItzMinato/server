@@ -34,9 +34,6 @@ public class ResourceService {
         this.activityLogService = activityLogService;
     }
 
-    // -------------------------------------------------------
-    //                       UPLOAD
-    // -------------------------------------------------------
     public ResourceFile uploadFile(Long groupId, UploadResourceRequest req, MultipartFile file)
             throws IOException {
 
@@ -60,15 +57,11 @@ public class ResourceService {
 
         ResourceFile saved = resourceRepository.save(resource);
 
-        // ⭐ LOG ACTION
         activityLogService.log(uploader, "Uploaded file: " + file.getOriginalFilename());
 
         return saved;
     }
 
-    // -------------------------------------------------------
-    //                       LIST FILES
-    // -------------------------------------------------------
     public List<ResourceFile> getFiles(Long groupId) {
         StudyGroup group = groupRepository.findById(groupId)
                 .orElseThrow(() -> new RuntimeException("Group not found"));
@@ -76,17 +69,11 @@ public class ResourceService {
         return resourceRepository.findByGroup(group);
     }
 
-    // -------------------------------------------------------
-    //                  GET FILE BY ID
-    // -------------------------------------------------------
     public ResourceFile getFile(Long fileId) {
         return resourceRepository.findById(fileId)
                 .orElseThrow(() -> new RuntimeException("File not found"));
     }
 
-    // -------------------------------------------------------
-    //                  DELETE FILE
-    // -------------------------------------------------------
     public void deleteFile(Long groupId, Long fileId) {
 
         ResourceFile file = resourceRepository.findById(fileId)

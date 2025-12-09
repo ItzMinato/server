@@ -26,7 +26,7 @@ public class Task {
     private String description;
 
     @Column(nullable = false)
-    private String status; // OPEN, IN_PROGRESS, DONE
+    private String status;
 
     @Column
     private LocalDateTime deadline;
@@ -45,8 +45,6 @@ public class Task {
     }
 
     public Task() {}
-
-    // GETTERS / SETTERS
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }

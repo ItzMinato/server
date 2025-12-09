@@ -33,10 +33,6 @@ public class ResourceFile {
         if (uploadedAt == null) uploadedAt = LocalDateTime.now();
     }
 
-    // -----------------------
-    // Getters and Setters
-    // -----------------------
-
     public Long getId() {
         return id;
     }

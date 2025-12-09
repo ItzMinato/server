@@ -28,7 +28,6 @@ public class ActivityLogController {
     @GetMapping("/user/{username}")
     public List<ActivityLog> getUserLogs(@PathVariable String username) {
 
-        // ❗ отримуємо entity User, а не DTO
         User user = userService.getUserEntity(username);
 
         return logService.getUserActivity(user);

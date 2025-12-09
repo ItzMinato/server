@@ -19,7 +19,7 @@ public class User {
     private String username;
 
     @Column(nullable = false)
-    private String password; // буде зберігатися у зашифрованому вигляді (BCrypt)
+    private String password;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -32,8 +32,6 @@ public class User {
         this.password = password;
         this.role = role;
     }
-
-    // ---------- GETTERS / SETTERS -----------
 
     public Long getId() {
         return id;

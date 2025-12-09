@@ -23,10 +23,6 @@ public class ResourceController {
     public ResourceController(ResourceService resourceService) {
         this.resourceService = resourceService;
     }
-
-    // -------------------------------------------------------
-    //                     UPLOAD FILE
-    // -------------------------------------------------------
     @PostMapping(
             value = "/upload",
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE
@@ -39,18 +35,11 @@ public class ResourceController {
 
         return ResponseEntity.ok(resourceService.uploadFile(groupId, req, file));
     }
-
-    // -------------------------------------------------------
-    //                     GET LIST
-    // -------------------------------------------------------
     @GetMapping
     public ResponseEntity<List<ResourceFile>> getFiles(@PathVariable Long groupId) {
         return ResponseEntity.ok(resourceService.getFiles(groupId));
     }
 
-    // -------------------------------------------------------
-    //                DOWNLOAD FILE ENDPOINT
-    // -------------------------------------------------------
     @GetMapping("/{fileId}/download")
     public ResponseEntity<byte[]> downloadFile(
             @PathVariable Long groupId,
@@ -73,9 +62,6 @@ public class ResourceController {
                 .body(fileBytes);
     }
 
-    // -------------------------------------------------------
-    //                DELETE FILE ENDPOINT
-    // -------------------------------------------------------
     @DeleteMapping("/{fileId}")
     public ResponseEntity<Void> deleteFile(
             @PathVariable Long groupId,

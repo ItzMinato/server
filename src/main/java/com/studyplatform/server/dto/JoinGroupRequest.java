@@ -2,7 +2,7 @@ package com.studyplatform.server.dto;
 
 public class JoinGroupRequest {
     private Long userId;
-    private String role; // optional: MEMBER by default
+    private String role;
 
     public JoinGroupRequest() {}
 
