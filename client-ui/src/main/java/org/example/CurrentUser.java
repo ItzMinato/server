@@ -2,31 +2,24 @@ package org.example;
 
 public class CurrentUser {
 
-    private static Long id;
     private static String username;
-    private static String role;
+    private static Long userId;
 
-    public static void setUser(Long userId, String userName, String userRole) {
-        id = userId;
-        username = userName;
-        role = userRole;
-    }
-
-    public static Long getId() {
-        return id;
+    public static void setUser(String name, Long id) {
+        username = name;
+        userId = id;
     }
 
     public static String getUsername() {
         return username;
     }
 
-    public static String getRole() {
-        return role;
+    public static Long getUserId() {
+        return userId;
     }
 
     public static void clear() {
-        id = null;
         username = null;
-        role = null;
+        userId = null;
     }
 }

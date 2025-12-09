@@ -32,7 +32,8 @@ public class LoginController {
             System.out.println("Server response: " + response);
 
             // Save logged user
-            CurrentUser.setUsername(username);
+            CurrentUser.setUser(username, 1L);  // тимчасово userId = 1
+
 
             // Load main window
             FXMLLoader loader = new FXMLLoader(MainApp.class.getResource("/fxml/main-view.fxml"));
