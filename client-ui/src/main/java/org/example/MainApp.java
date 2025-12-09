@@ -10,10 +10,10 @@ public class MainApp extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         FXMLLoader fxmlLoader = new FXMLLoader(
-                MainApp.class.getResource("/fxml/main-view.fxml")
+                MainApp.class.getResource("/fxml/login-view.fxml")   // << тут міняємо
         );
-        Scene scene = new Scene(fxmlLoader.load(), 600, 400);
-        stage.setTitle("Client UI");
+        Scene scene = new Scene(fxmlLoader.load(), 400, 300);        // розмір під логін
+        stage.setTitle("Client UI - Login");
         stage.setScene(scene);
         stage.show();
     }
