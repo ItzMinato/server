@@ -11,7 +11,6 @@ import java.util.List;
 
 public class GroupsController {
 
-    // IMPORTANT: Now ListView holds Group objects, not Strings
     @FXML
     private ListView<Group> groupsList;
 
@@ -27,7 +26,6 @@ public class GroupsController {
             groupsList.getItems().clear();
             groupsList.getItems().addAll(groups);
 
-            // Thanks to Group.toString(), the ListView will show group names
         } catch (Exception e) {
             showAlert("Error", "Failed to load groups:\n" + e.getMessage());
         }
@@ -50,8 +48,6 @@ public class GroupsController {
 
     @FXML
     private void onOpenGroup() {
-
-        // Now this returns a Group object, not a String
         Group selected = groupsList.getSelectionModel().getSelectedItem();
 
         if (selected == null) {
@@ -63,7 +59,6 @@ public class GroupsController {
             FXMLLoader loader = new FXMLLoader(MainApp.class.getResource("/fxml/group-details.fxml"));
             Scene scene = new Scene(loader.load(), 600, 400);
 
-            // Pass group ID to GroupDetailsController
             GroupDetailsController controller = loader.getController();
             controller.setGroupId(selected.getId());
 
@@ -90,6 +85,7 @@ public class GroupsController {
         }
     }
 
+    // ✅ ТЕПЕР ЦЕ ОКРЕМИЙ МЕТОД
     private void showAlert(String title, String msg) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(title);

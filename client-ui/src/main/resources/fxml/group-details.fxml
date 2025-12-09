@@ -26,6 +26,10 @@
         <Button text="Tasks"
                 layoutX="150" layoutY="350"
                 onAction="#onOpenTasks"/>
+        <Button text="Resources"
+                layoutX="450" layoutY="170"
+                prefWidth="120"
+                onAction="#onOpenResources"/>
 
         <Button text="Back"
                 layoutX="30" layoutY="350"
