@@ -71,4 +71,23 @@ public class ApiClient {
 
         return Arrays.asList(groups);
     }
+
+    // ---------- CREATE NEW GROUP ------------------
+
+    public static String createGroup(String name) throws Exception {
+
+        JsonObject json = new JsonObject();
+        json.addProperty("name", name);
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(BASE_URL + "/groups"))
+                .header("Content-Type", "application/json")
+                .POST(HttpRequest.BodyPublishers.ofString(json.toString()))
+                .build();
+
+        HttpResponse<String> response =
+                client.send(request, HttpResponse.BodyHandlers.ofString());
+
+        return response.body();
+    }
 }
