@@ -2,6 +2,7 @@ package org.example;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -15,7 +16,7 @@ public class ApiClient {
     private static final HttpClient client = HttpClient.newHttpClient();
     private static final Gson gson = new Gson();
 
-    // ------------------ AUTH ---------------------
+    // ---------- AUTH ----------
 
     public static String register(String username, String password, String role) throws Exception {
 
@@ -51,10 +52,10 @@ public class ApiClient {
         HttpResponse<String> response =
                 client.send(request, HttpResponse.BodyHandlers.ofString());
 
-        return response.body(); // ПОВЕРТАЄМО СИРЕ JSON
+        return response.body();
     }
 
-    // ------------------ GROUPS ---------------------
+    // ---------- GROUPS ----------
 
     public static List<Group> getUserGroups() throws Exception {
 
@@ -72,12 +73,12 @@ public class ApiClient {
         return Arrays.asList(groups);
     }
 
-    // ---------- CREATE NEW GROUP ------------------
-
     public static String createGroup(String name) throws Exception {
 
         JsonObject json = new JsonObject();
         json.addProperty("name", name);
+        json.addProperty("description", "");
+        json.addProperty("creatorId", 1);   // тимчасово: групи створює юзер з id=1
 
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(BASE_URL + "/groups"))
