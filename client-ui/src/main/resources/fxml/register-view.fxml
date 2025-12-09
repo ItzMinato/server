@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefWidth="400" prefHeight="350"
+            xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="org.example.RegisterController">
+
+    <children>
+
+        <Label text="Register"
+               layoutX="160" layoutY="20"
+               style="-fx-font-size: 22px; -fx-font-weight: bold;"/>
+
+        <Label text="Username:" layoutX="50" layoutY="90"/>
+        <TextField fx:id="usernameField" layoutX="150" layoutY="85" prefWidth="180"/>
+
+        <Label text="Password:" layoutX="50" layoutY="140"/>
+        <PasswordField fx:id="passwordField" layoutX="150" layoutY="135" prefWidth="180"/>
+
+        <Label text="Role:" layoutX="50" layoutY="190"/>
+        <ChoiceBox fx:id="roleChoice" layoutX="150" layoutY="185" prefWidth="180"/>
+
+        <Button text="Create account"
+                layoutX="150" layoutY="250"
+                prefWidth="120"
+                onAction="#onRegister"/>
+
+        <Button text="Back"
+                layoutX="280" layoutY="250"
+                prefWidth="60"
+                onAction="#onBack"/>
+    </children>
+
+</AnchorPane>
