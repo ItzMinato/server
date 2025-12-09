@@ -21,7 +21,7 @@
         <PasswordField fx:id="passwordField" layoutX="150" layoutY="135" prefWidth="180"/>
 
         <Label text="Role:" layoutX="50" layoutY="190"/>
-        <ChoiceBox fx:id="roleChoice" layoutX="150" layoutY="185" prefWidth="180"/>
+        <ComboBox fx:id="roleBox" layoutX="150" layoutY="185" prefWidth="180"/>
 
         <Button text="Create account"
                 layoutX="150" layoutY="250"
