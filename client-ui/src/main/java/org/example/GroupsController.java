@@ -34,10 +34,22 @@ public class GroupsController {
         }
     }
 
+    // ------------------ FIXED METHOD ------------------
     @FXML
     private void onCreateGroup() {
-        showAlert("Info", "Create Group clicked.");
+        try {
+            FXMLLoader loader = new FXMLLoader(MainApp.class.getResource("/fxml/create-group-view.fxml"));
+            Scene scene = new Scene(loader.load(), 400, 200);
+
+            Stage stage = (Stage) groupsList.getScene().getWindow();
+            stage.setScene(scene);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            showAlert("Error", "Cannot open Create Group window:\n" + e.getMessage());
+        }
     }
+    // --------------------------------------------------
 
     @FXML
     private void onOpenGroup() {
