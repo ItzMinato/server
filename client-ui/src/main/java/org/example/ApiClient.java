@@ -6,12 +6,16 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.Arrays;
+import java.util.List;
 
 public class ApiClient {
 
-    private static final String BASE_URL = "http://localhost:8080/api/auth";
+    private static final String BASE_URL = "http://localhost:8080/api";
     private static final HttpClient client = HttpClient.newHttpClient();
     private static final Gson gson = new Gson();
+
+    // ------------------ AUTH ---------------------
 
     public static String register(String username, String password, String role) throws Exception {
 
@@ -21,12 +25,13 @@ public class ApiClient {
         json.addProperty("role", role);
 
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(BASE_URL + "/register"))
+                .uri(URI.create(BASE_URL + "/auth/register"))
                 .header("Content-Type", "application/json")
                 .POST(HttpRequest.BodyPublishers.ofString(json.toString()))
                 .build();
 
-        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        HttpResponse<String> response =
+                client.send(request, HttpResponse.BodyHandlers.ofString());
 
         return response.body();
     }
@@ -38,13 +43,32 @@ public class ApiClient {
         json.addProperty("password", password);
 
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(BASE_URL + "/login"))
+                .uri(URI.create(BASE_URL + "/auth/login"))
                 .header("Content-Type", "application/json")
                 .POST(HttpRequest.BodyPublishers.ofString(json.toString()))
                 .build();
 
-        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        HttpResponse<String> response =
+                client.send(request, HttpResponse.BodyHandlers.ofString());
 
         return response.body();
+    }
+
+    // ------------------ GROUPS ---------------------
+
+    public static List<Group> getUserGroups() throws Exception {
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(BASE_URL + "/groups/my"))
+                .header("Content-Type", "application/json")
+                .GET()
+                .build();
+
+        HttpResponse<String> response =
+                client.send(request, HttpResponse.BodyHandlers.ofString());
+
+        Group[] groups = gson.fromJson(response.body(), Group[].class);
+
+        return Arrays.asList(groups);
     }
 }

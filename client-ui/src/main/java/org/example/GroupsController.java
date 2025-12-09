@@ -7,6 +7,8 @@ import javafx.stage.Stage;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 
+import java.util.List;
+
 public class GroupsController {
 
     @FXML
@@ -14,13 +16,27 @@ public class GroupsController {
 
     @FXML
     private void initialize() {
-        // Temporary test data
-        groupsList.getItems().addAll("Math Group", "Physics Group", "Java Course");
+        loadGroups();
+    }
+
+    private void loadGroups() {
+        try {
+            List<Group> groups = ApiClient.getUserGroups();
+
+            groupsList.getItems().clear();
+
+            for (Group g : groups) {
+                groupsList.getItems().add(g.getName());
+            }
+
+        } catch (Exception e) {
+            showAlert("Error", "Failed to load groups:\n" + e.getMessage());
+        }
     }
 
     @FXML
     private void onCreateGroup() {
-        showAlert("Info", "Create Group button clicked.");
+        showAlert("Info", "Create Group clicked.");
     }
 
     @FXML
